@@ -58,3 +58,21 @@ struct CentralDirectoryFileHeader {
 };
 
 CentralDirectoryFileHeader centralDirHeaders[fileInfo.CDRCount] @ (fileInfo.CDOffset) [[name("Files")]];
+
+struct LocalFileHeader {
+    u32 headerSignature [[color("00000000")]];
+    u16 versionExtract [[comment("Minimum version needed to extract")]];
+    u16 generalFlag [[comment("General purpose bit flag"), color("00000000")]];
+    u16 compressionMethod;
+    u16 fileLastModifyTime [[comment("File last modification time")]];
+    u16 fileLastModifyDate [[comment("File last modification date")]];
+    u32 crc32 [[comment("CRC-32 of uncompressed data"), color("00000000")]];
+    u32 compressedSize;
+    u32 uncompressedSize;
+    u16 fileNameLength [[color("00000000")]];
+    u16 extraFieldLength [[color("00000000")]];
+    char fileName[fileNameLength];
+    u8 extraField[extraFieldLength];
+    u8 compressedFile[compressedSize];
+};
+LocalFileHeader localFile[fileInfo.CDRCount] @ centralDirHeaders[0].fileOffset;
